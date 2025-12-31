@@ -501,3 +501,6 @@ For issues or questions:
 ---
 
 **Built with ❤️ using Clean Architecture, Poetry, PostgreSQL & Streamlit**
+=======
+# rs_fruit_bites
+
