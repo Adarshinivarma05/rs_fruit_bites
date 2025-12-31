@@ -2,7 +2,7 @@
 from functools import lru_cache
 from typing import Optional
 
-from pydantic import PostgresDsn, field_validator
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     debug: bool = False
 
     # Database
-    database_url: PostgresDsn
+    database_url: str  # ← MUST be str for SQLAlchemy
     database_echo: bool = False
 
     # Business Logic
@@ -33,13 +33,13 @@ class Settings(BaseSettings):
     @field_validator("database_url", mode="before")
     @classmethod
     def validate_database_url(cls, v: Optional[str]) -> str:
-        """Validate database URL format."""
         if not v:
             raise ValueError("DATABASE_URL must be set")
+        if not v.startswith("postgresql"):
+            raise ValueError("DATABASE_URL must be a PostgreSQL URL")
         return v
 
 
 @lru_cache
 def get_settings() -> Settings:
-    """Get cached settings instance."""
     return Settings()
